@@ -1,7 +1,50 @@
 import { OAuth2Client } from 'google-auth-library';
+import AuthService from './util/authService';
+import UnauthorizedError from './util/unauthorizedError';
+import UpdatePicture from './util/updatePicture';
 
-export default class Google {
-  async checkToken(identification, headers, item?): Promise<boolean> {
+export default class Google implements AuthService {
+  protected updatePicture: UpdatePicture;
+  constructor(updatePicture: UpdatePicture) {
+    this.updatePicture = updatePicture;
+  }
+  async verify(
+    identification: { identification: string | undefined; type: string },
+    identifications: { identification: string | undefined; type: string }[],
+    headers: {
+      tokenid: string;
+      picture: string;
+    }
+  ): Promise<void> {
+    const error = new UnauthorizedError('GAccount error.');
+    // console.log('verifyGoogle');
+    if (!(await this.compare(identification, identifications, headers))) {
+      // console.log('KeyService.compare FALSE');
+      throw error;
+    }
+  }
+  async checkPicture(
+    identification: { identification: string | undefined; type: string },
+    headers: { tokenid: string; picture: string },
+    item?: { picture?: string },
+    payload?: { picture?: string }
+  ): Promise<void> {
+    if (payload && payload.picture && payload.picture !== headers.picture) {
+      // console.log(payload.picture);
+      if (item) {
+        if (Array.isArray(item)) {
+          for (const received of item) {
+            received.picture = payload.picture;
+          }
+        } else item.picture = payload.picture;
+      } else this.updatePicture(identification, payload.picture);
+    }
+  }
+  async checkToken(
+    identification: { identification: string | undefined; type: string },
+    headers: { tokenid: string; picture: string },
+    item?: { picture: string } | undefined
+  ): Promise<boolean> {
     return new Promise(async (resolve) => {
       // console.log('checkToken');
       // console.log(identification);
@@ -33,34 +76,7 @@ export default class Google {
 
         // console.log(payload);
         // console.log(item);
-
-        if (payload && payload.picture && payload.picture !== headers.picture) {
-          // console.log(payload.picture);
-          if (item) {
-            if (Array.isArray(item)) {
-              for (const received of item) {
-                received.picture = payload.picture;
-              }
-            } else item.picture = payload.picture;
-          } else
-            this.journaly?.publish('PersonService.update', {
-              single: true,
-              scheme: 'Person',
-              selectedItem: {
-                identifications: {
-                  $elemMatch: {
-                    $or: [
-                      {
-                        type: identification.type,
-                        identification: identification.identification,
-                      },
-                    ],
-                  },
-                },
-              },
-              item: { picture: payload.picture },
-            });
-        }
+        this.checkPicture(identification, headers, item, payload);
         resolve(true);
         // const userid = payload['sub'];
         // If request specified a G Suite domain:
@@ -70,12 +86,13 @@ export default class Google {
     });
   }
   async compare(
-    rIdentification,
-    identifications: Array<any>,
-    headers
+    rIdentification: { identification: string | undefined; type: string },
+    identifications: { identification: string | undefined; type: string }[],
+    headers: {
+      tokenid: string;
+      picture: string;
+    }
   ): Promise<boolean> {
-    // console.log(rIdentification);
-    // console.log(identifications);
     for (const identification of identifications) {
       if (identification.identification === rIdentification.identification)
         if (await this.checkToken(rIdentification, headers)) return true;

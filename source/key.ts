@@ -2,8 +2,9 @@ import { setTimeout } from 'timers';
 import axios from 'axios';
 import bcrypt from 'bcrypt';
 import { default as crypt } from '../config/crypt.json';
+import AuthService from './util/authService';
 
-export default class Key {
+export default class Key implements AuthService {
   async key(): Promise<string> {
     if (this.privateKey && this.publicKey) {
       return this.publicKey;
@@ -82,6 +83,15 @@ export default class Key {
       return this.authToken;
     } else {
       return this.getToken();
+    }
+  }
+
+  async verify(identification, identifications): Promise<void> {
+    const error = new Error('Wrong User or Password.');
+    error.name = 'Unauthorized';
+    if (!(await this.compare(identification, identifications))) {
+      // console.log('KeyService.compare FALSE');
+      throw error;
     }
   }
 

@@ -16,7 +16,10 @@ export default class JsonWebToken {
     return this._instance;
   }
 
-  async verify(token: string, key?: string): Promise<{ permissions: unknown }> {
+  async verify(
+    token: string,
+    key?: string
+  ): Promise<{ permissions: unknown; id: unknown }> {
     return new Promise(async (resolve, reject) => {
       try {
         key = key ? key : await Key.getInstance().key();

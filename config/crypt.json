@@ -1,0 +1,11 @@
+{
+  "hashSaltRounds": 10,
+  "signOptions": {
+    "algorithm": "RS256",
+    "expiresIn": "15m"
+  },
+  "signServiceOptions": {
+    "algorithm": "RS256",
+    "expiresIn": "15d"
+  }
+}

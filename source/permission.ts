@@ -1,5 +1,6 @@
 // file deepcode ignore no-any: any needed for type inference
 import { Operation } from 'flexiblepersistence';
+import UnauthorizedError from './util/unauthorizedError';
 
 export default class Permission {
   protected static _instance: Permission;
@@ -35,8 +36,7 @@ export default class Permission {
             if (operation) resolve(true);
           }
         }
-        const error = new Error('Unauthorized');
-        error.name = 'Unauthorized';
+        const error = new UnauthorizedError('Unauthorized');
         reject(error);
       } catch (error) {
         reject(error);
