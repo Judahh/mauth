@@ -1,5 +1,7 @@
 import { OAuth2Client } from 'google-auth-library';
 import AuthService from './util/authService';
+import Headers from './util/headers';
+import Identification from './util/identification';
 import UnauthorizedError from './util/unauthorizedError';
 import UpdatePicture from './util/updatePicture';
 
@@ -9,20 +11,9 @@ export default class Google implements AuthService {
     this.updatePicture = updatePicture;
   }
   async verify(
-    identification: {
-      identification: string | undefined;
-      key: string | undefined;
-      type: string;
-    },
-    identifications: {
-      identification: string | undefined;
-      key: string | undefined;
-      type: string;
-    }[],
-    headers: {
-      tokenid: string;
-      picture: string;
-    }
+    identification: Identification,
+    identifications: Identification[],
+    headers: Headers
   ): Promise<void> {
     const error = new UnauthorizedError('GAccount error.');
     // console.log('verifyGoogle');
@@ -32,8 +23,8 @@ export default class Google implements AuthService {
     }
   }
   async checkPicture(
-    identification: { identification: string | undefined; type: string },
-    headers: { tokenid: string; picture: string },
+    identification: Identification,
+    headers: Headers,
     item?: { picture?: string },
     payload?: { picture?: string }
   ): Promise<void> {
@@ -49,9 +40,9 @@ export default class Google implements AuthService {
     }
   }
   async checkToken(
-    identification: { identification: string | undefined; type: string },
-    headers: { tokenid: string; picture: string },
-    item?: { picture: string } | undefined
+    identification: Identification,
+    headers: Headers,
+    item?: { picture: string }
   ): Promise<boolean> {
     return new Promise(async (resolve) => {
       // console.log('checkToken');
@@ -94,12 +85,9 @@ export default class Google implements AuthService {
     });
   }
   async compare(
-    rIdentification: { identification: string | undefined; type: string },
-    identifications: { identification: string | undefined; type: string }[],
-    headers: {
-      tokenid: string;
-      picture: string;
-    }
+    rIdentification: Identification,
+    identifications: Identification[],
+    headers: Headers
   ): Promise<boolean> {
     for (const identification of identifications) {
       if (identification.identification === rIdentification.identification)

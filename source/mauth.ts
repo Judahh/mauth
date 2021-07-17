@@ -2,6 +2,12 @@ import Permission from './permission';
 import JsonWebToken from './jsonWebToken';
 import UnauthorizedError from './util/unauthorizedError';
 import Verify from './util/verify';
+import Identification from './util/identification';
+import Headers from './util/headers';
+import Query from './util/query';
+import Params from './util/params';
+import Event from './util/event';
+import Permissions from './util/permissions';
 
 export default class Mauth {
   protected verify: {
@@ -13,7 +19,7 @@ export default class Mauth {
     identification: unknown
   ) => Promise<{
     person: { receivedItem: unknown };
-    identifications: unknown;
+    identifications: Identification[];
   }>;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -23,7 +29,7 @@ export default class Mauth {
       identification: unknown
     ) => Promise<{
       person: { receivedItem: unknown };
-      identifications: unknown;
+      identifications: Identification[];
     }>,
     verify: {
       [type: string]: (
@@ -52,8 +58,8 @@ export default class Mauth {
   }
 
   getAuthentication(req: {
-    headers?: { authorization?: string };
-    query?: { token?: string };
+    headers?: Headers;
+    query?: Query;
   }): string | undefined {
     const bearer = req.headers
       ? this.getBearerAuthentication(req.headers.authorization)
@@ -65,8 +71,8 @@ export default class Mauth {
   async selfRestriction(
     req: {
       authorization: string;
-      query: { id: unknown };
-      params?: { filter?: { id?: unknown } };
+      query: Query;
+      params?: Params;
     },
     _res: unknown,
     // eslint-disable-next-line no-unused-vars
@@ -100,14 +106,18 @@ export default class Mauth {
   }
 
   async signIn(
-    identification: { type: string },
-    headers: unknown
+    identification: Identification,
+    headers?: Headers
   ): Promise<unknown> {
     const personAndIdentifications = await this.getPersonAndIdentifications(
       identification
     );
     const person = personAndIdentifications.person;
-    const identifications = personAndIdentifications.identifications;
+    const identifications = personAndIdentifications.identifications as {
+      identification: string | undefined;
+      key: string | undefined;
+      type: string;
+    }[];
 
     await this.verify[identification.type](
       identification,
@@ -124,11 +134,11 @@ export default class Mauth {
 
   async checkToken(
     req: {
-      query?: { token?: string };
-      headers?: { authorization?: string };
+      query?: Query;
+      headers?: Headers;
       authorization?: string;
       permissions?: unknown;
-      body?: { type: string; identification: unknown };
+      body?: Identification;
     },
     _res: unknown,
     // eslint-disable-next-line no-unused-vars
@@ -151,11 +161,11 @@ export default class Mauth {
 
   async authentication(
     req: {
-      query?: { token?: string };
-      headers?: { authorization?: string };
+      query?: Query;
+      headers?: Headers;
       authorization?: string;
       permissions?: unknown;
-      body?: { type: string; identification: unknown };
+      body?: Identification;
     },
     res: unknown,
     // eslint-disable-next-line no-unused-vars
@@ -180,7 +190,7 @@ export default class Mauth {
   }
 
   async permission(
-    req: { event: unknown; permissions: unknown },
+    req: { event: Event; permissions: Permissions },
     _res: unknown,
     // eslint-disable-next-line no-unused-vars
     fn: (arg0: unknown) => Promise<unknown>
