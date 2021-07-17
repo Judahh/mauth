@@ -18,13 +18,13 @@ export default class Key implements AuthService {
       return this.getKey();
     }
   }
-  private async getKey(): Promise<string> {
+  protected async getKey(): Promise<string> {
     const host = process.env.AUTH_HOST;
     const received = await axios.get(host + '/key', await this.config());
     this.publicKey = received.data.key as string;
     return this.publicKey;
   }
-  private refreshKey() {
+  protected refreshKey() {
     this.keyTimerRunning = false;
     this.getKey();
   }
@@ -41,13 +41,13 @@ export default class Key implements AuthService {
     }
     return this._instance;
   }
-  private privateKey?: string = process.env.JWT_PRIVATE_KEY;
-  private publicKey?: string = process.env.JWT_PUBLIC_KEY;
-  private keyTimerRunning: boolean;
-  private authToken;
-  private tokenTimerRunning;
+  protected privateKey?: string = process.env.JWT_PRIVATE_KEY;
+  protected publicKey?: string = process.env.JWT_PUBLIC_KEY;
+  protected keyTimerRunning: boolean;
+  protected authToken;
+  protected tokenTimerRunning;
 
-  private credential = {
+  protected credential = {
     type: 'SERVICE',
     identification: process.env.AUTH_IDENTIFICATION,
     key: process.env.AUTH_PASSWORD,
@@ -64,13 +64,13 @@ export default class Key implements AuthService {
       },
     };
   }
-  private async getToken(): Promise<string> {
+  protected async getToken(): Promise<string> {
     const host = process.env.AUTH_HOST;
     const received = await axios.post(host + '/signIn', this.credential);
     this.authToken = received.data.token;
     return this.authToken;
   }
-  private refreshToken() {
+  protected refreshToken() {
     this.tokenTimerRunning = false;
     this.getToken();
   }
