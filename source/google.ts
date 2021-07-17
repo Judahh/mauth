@@ -9,8 +9,16 @@ export default class Google implements AuthService {
     this.updatePicture = updatePicture;
   }
   async verify(
-    identification: { identification: string | undefined; type: string },
-    identifications: { identification: string | undefined; type: string }[],
+    identification: {
+      identification: string | undefined;
+      key: string | undefined;
+      type: string;
+    },
+    identifications: {
+      identification: string | undefined;
+      key: string | undefined;
+      type: string;
+    }[],
     headers: {
       tokenid: string;
       picture: string;
