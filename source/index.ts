@@ -7,6 +7,12 @@ import JsonWebToken from './jsonWebToken';
 import Key from './key';
 import Mauth from './mauth';
 import Permission from './permission';
+import Headers from './util/headers';
+import Identification from './util/identification';
+import Event from './util/event';
+import Permissions from './util/permissions';
+import Params from './util/params';
+import Query from './util/query';
 
 export {
   AuthService,
@@ -18,4 +24,10 @@ export {
   Key,
   Mauth,
   Permission,
+  Headers,
+  Identification,
+  Event,
+  Params,
+  Permissions,
+  Query,
 };

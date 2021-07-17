@@ -1,6 +1,8 @@
 // file deepcode ignore no-any: any needed for type inference
 import { Operation } from 'flexiblepersistence';
 import UnauthorizedError from './util/unauthorizedError';
+import Event from './util/event';
+import Permissions from './util/permissions';
 
 export default class Permission {
   protected static _instance: Permission;
@@ -22,7 +24,7 @@ export default class Permission {
     return this._instance;
   }
 
-  permission(event, permissions): Promise<any> {
+  permission(event: Event, permissions: Permissions): Promise<unknown> {
     return new Promise(async (resolve, reject) => {
       try {
         const instanceName = this.getInstanceName();
@@ -36,7 +38,7 @@ export default class Permission {
             if (operation) resolve(true);
           }
         }
-        const error = new UnauthorizedError('Unauthorized');
+        const error = new UnauthorizedError();
         reject(error);
       } catch (error) {
         reject(error);

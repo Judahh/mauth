@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { default as crypt } from '../config/crypt.json';
 import AuthService from './util/authService';
 import { UnauthorizedError } from '.';
+import Identification from './util/identification';
 
 export default class Key implements AuthService {
   async key(): Promise<string> {
@@ -25,7 +26,7 @@ export default class Key implements AuthService {
     this.publicKey = received.data.key as string;
     return this.publicKey;
   }
-  protected refreshKey() {
+  protected async refreshKey(): Promise<void> {
     this.keyTimerRunning = false;
     this.getKey();
   }
@@ -71,7 +72,7 @@ export default class Key implements AuthService {
     this.authToken = received.data.token;
     return this.authToken;
   }
-  protected refreshToken() {
+  protected async refreshToken(): Promise<void> {
     this.tokenTimerRunning = false;
     this.getToken();
   }
@@ -88,16 +89,8 @@ export default class Key implements AuthService {
   }
 
   async verify(
-    rIdentification: {
-      identification: string | undefined;
-      key: string | undefined;
-      type: string;
-    },
-    identifications: {
-      identification: string | undefined;
-      key: string | undefined;
-      type: string;
-    }[]
+    rIdentification: Identification,
+    identifications: Identification[]
   ): Promise<void> {
     // console.log(rIdentification, identifications);
     for (const identification of identifications) {
@@ -109,7 +102,7 @@ export default class Key implements AuthService {
         if (await bcrypt.compare(rIdentification.key, identification.key))
           return;
     }
-    const error = new UnauthorizedError('Unauthorized');
+    const error = new UnauthorizedError();
     throw error;
   }
 
