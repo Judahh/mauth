@@ -1,9 +1,20 @@
 type Verify = (
   // eslint-disable-next-line no-unused-vars
-  identification: unknown,
+  identification: {
+    identification: string | undefined;
+    key: string | undefined;
+    type: string;
+  },
   // eslint-disable-next-line no-unused-vars
-  identifications: unknown,
+  identifications: {
+    identification: string | undefined;
+    key: string | undefined;
+    type: string;
+  }[],
   // eslint-disable-next-line no-unused-vars
-  headers: unknown
+  headers: {
+    tokenid: string;
+    picture: string;
+  }
 ) => Promise<void>;
 export default Verify;
