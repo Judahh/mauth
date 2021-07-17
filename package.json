@@ -1,0 +1,70 @@
+{
+  "name": "@midware/mauth",
+  "productName": "mauth",
+  "author": "Judah Holanda Correia Lima <judahholanda7@gmail.com> (https://judahh.com)",
+  "version": "0.0.1",
+  "private": false,
+  "description": "A simple pub-sub library project",
+  "main": "dist/source/index.js",
+  "keywords": [
+    "back-end",
+    "backend",
+    "middleware",
+    "midware",
+    "authorization",
+    "permission",
+    "authentication",
+    "auth",
+    "nodejs",
+    "typescript",
+    "javascript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Judahh/mauth.git"
+  },
+  "homepage": "https://github.com/Judahh/mauth#readme",
+  "license": "BSD-3-Clause",
+  "angular-cli": {},
+  "config": {
+    "jest": "--passWithNoTests --ci --verbose --forceExit --detectOpenHandles --colors",
+    "integration_config": "-i -c integration.config.json",
+    "unit_coverall": "tests/unit/coverage/lcov.info",
+    "integration_coverall": "tests/integration/coverage/lcov.info",
+    "path_dist": "dist",
+    "path_source": "src",
+    "path_server": "src/server"
+  },
+  "scripts": {
+    "postinstall": "",
+    "prepublish": "",
+    "build": "rm -rf dist/ && tsc",
+    "test": "jest $npm_package_config_jest",
+    "integration": "jest $npm_package_config_integration_config $npm_package_config_jest",
+    "prestart": "",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w"
+  },
+  "dependencies": {
+    "bcrypt": "latest",
+    "google-auth-library": "latest",
+    "jsonwebtoken": "latest",
+    "axios": "latest",
+    "flexiblepersistence": "latest"
+  },
+  "devDependencies": {
+    "@types/jest": "latest",
+    "@types/node": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "latest",
+    "eslint-config-prettier": "latest",
+    "eslint-plugin-filenames": "latest",
+    "eslint-plugin-prettier": "latest",
+    "eslint-plugin-import": "latest",
+    "jest": "latest",
+    "prettier": "latest",
+    "ts-jest": "latest",
+    "typescript": "latest"
+  }
+}
