@@ -2,6 +2,7 @@
 import jsonwebtoken from 'jsonwebtoken';
 import Key from './key';
 import { default as crypt } from '../config/crypt.json';
+import Permissions from './util/permissions';
 
 export default class JsonWebToken {
   protected static _instance: JsonWebToken;
@@ -19,7 +20,7 @@ export default class JsonWebToken {
   async verify(
     token: string,
     key?: string
-  ): Promise<{ permissions: unknown; id: unknown }> {
+  ): Promise<{ permissions: Permissions; id: unknown }> {
     return new Promise(async (resolve, reject) => {
       try {
         key = key ? key : await Key.getInstance().key();

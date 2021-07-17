@@ -13,7 +13,7 @@ export default class Google implements AuthService {
   async verify(
     identification: Identification,
     identifications: Identification[],
-    headers: Headers
+    headers?: Headers
   ): Promise<void> {
     const error = new UnauthorizedError('GAccount error.');
     // console.log('verifyGoogle');
@@ -41,7 +41,7 @@ export default class Google implements AuthService {
   }
   async checkToken(
     identification: Identification,
-    headers: Headers,
+    headers?: Headers,
     item?: { picture: string }
   ): Promise<boolean> {
     return new Promise(async (resolve) => {
@@ -87,7 +87,7 @@ export default class Google implements AuthService {
   async compare(
     rIdentification: Identification,
     identifications: Identification[],
-    headers: Headers
+    headers?: Headers
   ): Promise<boolean> {
     for (const identification of identifications) {
       if (identification.identification === rIdentification.identification)

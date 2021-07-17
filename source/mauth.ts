@@ -16,7 +16,7 @@ export default class Mauth {
 
   protected getPersonAndIdentifications: (
     // eslint-disable-next-line no-unused-vars
-    identification: unknown
+    identification: Identification
   ) => Promise<{
     person: { receivedItem: unknown };
     identifications: Identification[];
@@ -26,20 +26,13 @@ export default class Mauth {
   constructor(
     getPersonAndIdentifications: (
       // eslint-disable-next-line no-unused-vars
-      identification: unknown
+      identification: Identification
     ) => Promise<{
       person: { receivedItem: unknown };
       identifications: Identification[];
     }>,
     verify: {
-      [type: string]: (
-        // eslint-disable-next-line no-unused-vars
-        identification: unknown,
-        // eslint-disable-next-line no-unused-vars
-        identifications: unknown,
-        // eslint-disable-next-line no-unused-vars
-        headers: unknown
-      ) => Promise<void>;
+      [type: string]: Verify;
     }
   ) {
     this.getPersonAndIdentifications = getPersonAndIdentifications;
@@ -137,7 +130,7 @@ export default class Mauth {
       query?: Query;
       headers?: Headers;
       authorization?: string;
-      permissions?: unknown;
+      permissions?: Permissions;
       body?: Identification;
     },
     _res: unknown,
@@ -164,7 +157,7 @@ export default class Mauth {
       query?: Query;
       headers?: Headers;
       authorization?: string;
-      permissions?: unknown;
+      permissions?: Permissions;
       body?: Identification;
     },
     res: unknown,

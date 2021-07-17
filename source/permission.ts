@@ -24,7 +24,7 @@ export default class Permission {
     return this._instance;
   }
 
-  permission(event: Event, permissions: Permissions): Promise<unknown> {
+  permission(event: Event, permissions: Permissions): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
         const instanceName = this.getInstanceName();
