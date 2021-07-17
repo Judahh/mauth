@@ -3,6 +3,7 @@ import axios from 'axios';
 import bcrypt from 'bcrypt';
 import { default as crypt } from '../config/crypt.json';
 import AuthService from './util/authService';
+import { UnauthorizedError } from '.';
 
 export default class Key implements AuthService {
   async key(): Promise<string> {
@@ -86,35 +87,30 @@ export default class Key implements AuthService {
     }
   }
 
-  async verify(identification, identifications): Promise<void> {
-    const error = new Error('Wrong User or Password.');
-    error.name = 'Unauthorized';
-    if (!(await this.compare(identification, identifications))) {
-      // console.log('KeyService.compare FALSE');
-      throw error;
+  async verify(
+    rIdentification: {
+      identification: string | undefined;
+      key: string | undefined;
+      type: string;
+    },
+    identifications: {
+      identification: string | undefined;
+      key: string | undefined;
+      type: string;
+    }[]
+  ): Promise<void> {
+    // console.log(rIdentification, identifications);
+    for (const identification of identifications) {
+      if (
+        rIdentification.key &&
+        identification.key &&
+        identification.identification === rIdentification.identification
+      )
+        if (await bcrypt.compare(rIdentification.key, identification.key))
+          return;
     }
-  }
-
-  // async compare(
-  //   rIdentification: IdentificationServiceSimpleModel,
-  //   identifications: IdentificationServiceSimpleModel[]
-  // ): Promise<boolean> {
-  //   // console.log(rIdentification, identifications);
-  //   for (const identification of identifications) {
-  //     if (
-  //       rIdentification.key &&
-  //       identification.key &&
-  //       identification.identification === rIdentification.identification
-  //     )
-  //       if (await this.compareKey(rIdentification.key, identification.key))
-  //         return true;
-  //   }
-  //   return false;
-  // }
-
-  async compare(key: string, hash: string): Promise<boolean> {
-    // console.log(key, hash);
-    return bcrypt.compare(key, hash);
+    const error = new UnauthorizedError('Unauthorized');
+    throw error;
   }
 
   generateHash(key: string): string {
