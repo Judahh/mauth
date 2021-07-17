@@ -4,7 +4,7 @@ import UnauthorizedError from './util/unauthorizedError';
 
 export default class Permission {
   protected static _instance: Permission;
-  getInstance(): string {
+  getInstanceName(): string {
     return process.env.INSTANCE || 'auth'; //|| 'VUTT';
   }
 
@@ -25,7 +25,7 @@ export default class Permission {
   permission(event, permissions): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-        const instanceName = this.getInstance();
+        const instanceName = this.getInstanceName();
         const instance = permissions['all'] || permissions[instanceName];
         if (instance) {
           const service = instance['all'] || instance[event.name];

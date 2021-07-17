@@ -66,6 +66,7 @@ export default class Mauth {
     req: {
       authorization: string;
       query: { id: unknown };
+      params?: { filter?: { id?: unknown } };
     },
     _res: unknown,
     // eslint-disable-next-line no-unused-vars
@@ -77,10 +78,8 @@ export default class Mauth {
         // console.log('authentication', auth);
         if (
           (req.query && req.query.id === auth.id) ||
-          (req['params'] && req['params'].filter === auth.id) ||
-          (req['params'] &&
-            req['params'].filter &&
-            req['params'].filter.id === auth.id)
+          (req.params && req.params.filter === auth.id) ||
+          (req.params && req.params.filter && req.params.filter.id === auth.id)
         )
           await fn(auth);
         else {

@@ -7,6 +7,8 @@
   "description": "A simple pub-sub library project",
   "main": "dist/source/index.js",
   "keywords": [
+    "back-end",
+    "backend",
     "middleware",
     "midware",
     "authorization",
