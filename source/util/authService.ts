@@ -1,3 +1,4 @@
+import Headers from './headers';
 import Identification from './identification';
 
 /* eslint-disable no-unused-vars */
