@@ -39,7 +39,7 @@ export default class Mauth {
     this.verify = verify;
   }
 
-  getBearerAuthentication(bearer?: string): string | undefined {
+  static getBearerAuthentication(bearer?: string): string | undefined {
     const newBearer = bearer
       ? bearer.includes('Bearer ')
         ? bearer.replace('Bearer ', '')
@@ -55,7 +55,7 @@ export default class Mauth {
     query?: Query;
   }): string | undefined {
     const bearer = req.headers
-      ? this.getBearerAuthentication(req.headers.authorization)
+      ? Mauth.getBearerAuthentication(req.headers.authorization)
       : undefined;
     const token = req.query ? req.query.token : undefined;
     return bearer || token;
