@@ -2,7 +2,7 @@
 import jsonwebtoken from 'jsonwebtoken';
 import Key from './key';
 import { default as crypt } from '../config/crypt.json';
-import Permissions from './util/permissions';
+import Identification from './util/identification';
 
 export default class JsonWebToken {
   protected static _instance: JsonWebToken;
@@ -17,10 +17,7 @@ export default class JsonWebToken {
     return this._instance;
   }
 
-  async verify(
-    token: string,
-    key?: string
-  ): Promise<{ permissions: Permissions; id: unknown }> {
+  async verify(token?: string, key?: string): Promise<Identification> {
     return new Promise(async (resolve, reject) => {
       try {
         key = key ? key : await Key.getInstance().key();
@@ -35,10 +32,10 @@ export default class JsonWebToken {
     });
   }
 
-  sign(payload: unknown, key: string, type?: string): string {
+  sign(payload: unknown, type?: string, key?: string): string {
     return jsonwebtoken.sign(
       payload,
-      key,
+      key ? key : Key.getInstance().privateKey(),
       type !== 'SERVICE' ? crypt.signOptions : crypt.signServiceOptions
     );
   }
