@@ -8,23 +8,26 @@ import Identification from './util/identification';
 
 export default class Key implements AuthService {
   async key(): Promise<string> {
-    if (this.privateKey && this.publicKey) {
-      return this.publicKey;
-    } else if (this.publicKey) {
+    if (this._privateKey && this._publicKey) {
+      return this._publicKey;
+    } else if (this._publicKey) {
       if (!this.keyTimerRunning) {
         setTimeout(this.refreshKey.bind(this), 15 * 60 * 1000);
         this.keyTimerRunning = true;
       }
-      return this.publicKey;
+      return this._publicKey;
     } else {
       return this.getKey();
     }
   }
+  async privateKey(): Promise<string | undefined> {
+    return this._privateKey;
+  }
   protected async getKey(): Promise<string> {
     const host = process.env.AUTH_HOST;
     const received = await axios.get(host + '/key', await this.config());
-    this.publicKey = received.data.key as string;
-    return this.publicKey;
+    this._publicKey = received.data.key as string;
+    return this._publicKey;
   }
   protected async refreshKey(): Promise<void> {
     this.keyTimerRunning = false;
@@ -43,8 +46,8 @@ export default class Key implements AuthService {
     }
     return this._instance;
   }
-  protected privateKey?: string = process.env.JWT_PRIVATE_KEY;
-  protected publicKey?: string = process.env.JWT_PUBLIC_KEY;
+  protected _privateKey?: string = process.env.JWT_PRIVATE_KEY;
+  protected _publicKey?: string = process.env.JWT_PUBLIC_KEY;
   protected keyTimerRunning: boolean;
   protected authToken;
   protected tokenTimerRunning;
