@@ -32,10 +32,10 @@ export default class JsonWebToken {
     });
   }
 
-  sign(payload: unknown, type?: string, key?: string): string {
+  async sign(payload: unknown, type?: string, key?: string): Promise<string> {
     return jsonwebtoken.sign(
       payload,
-      key ? key : Key.getInstance().privateKey(),
+      key ? key : await Key.getInstance().privateKey(),
       type !== 'SERVICE' ? crypt.signOptions : crypt.signServiceOptions
     );
   }
