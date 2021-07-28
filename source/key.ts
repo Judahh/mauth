@@ -31,7 +31,7 @@ export default class Key implements AuthService {
   }
   protected async refreshKey(): Promise<void> {
     this.keyTimerRunning = false;
-    this.getKey();
+    await this.getKey();
   }
 
   protected static _instance: Key;
@@ -77,7 +77,7 @@ export default class Key implements AuthService {
   }
   protected async refreshToken(): Promise<void> {
     this.tokenTimerRunning = false;
-    this.getToken();
+    await this.getToken();
   }
   async token(): Promise<string> {
     if (this.authToken) {
