@@ -102,9 +102,16 @@ export default class Mauth {
     identification: Identification,
     headers?: Headers
   ): Promise<unknown> {
-    const personAndIdentifications = await this.getPersonAndIdentifications(
-      identification
-    );
+    let personAndIdentifications;
+    try {
+      personAndIdentifications = await this.getPersonAndIdentifications(
+        identification
+      );
+    } catch (error) {
+      error = new Error('Unauthorized');
+      error.name = 'Unauthorized';
+      throw error;
+    }
     const person = personAndIdentifications.person;
     const identifications = personAndIdentifications.identifications as {
       identification: string | undefined;
