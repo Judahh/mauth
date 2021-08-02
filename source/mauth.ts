@@ -10,11 +10,11 @@ import Event from './util/event';
 import Permissions from './util/permissions';
 
 export default class Mauth {
-  protected verify: {
+  protected verify?: {
     [type: string]: Verify;
   };
 
-  protected getPersonAndIdentifications: (
+  protected getPersonAndIdentifications?: (
     // eslint-disable-next-line no-unused-vars
     identification: Identification
   ) => Promise<{
@@ -24,14 +24,14 @@ export default class Mauth {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(
-    getPersonAndIdentifications: (
+    getPersonAndIdentifications?: (
       // eslint-disable-next-line no-unused-vars
       identification: Identification
     ) => Promise<{
       person: { receivedItem: unknown };
       identifications: Identification[];
     }>,
-    verify: {
+    verify?: {
       [type: string]: Verify;
     }
   ) {
@@ -104,9 +104,10 @@ export default class Mauth {
   ): Promise<unknown> {
     let personAndIdentifications;
     try {
-      personAndIdentifications = await this.getPersonAndIdentifications(
-        identification
-      );
+      if (this.getPersonAndIdentifications)
+        personAndIdentifications = await this.getPersonAndIdentifications(
+          identification
+        );
     } catch (error) {
       error = new Error('Unauthorized');
       error.name = 'Unauthorized';
@@ -119,11 +120,12 @@ export default class Mauth {
       type: string;
     }[];
 
-    await this.verify[identification.type](
-      identification,
-      identifications,
-      headers
-    );
+    if (this.verify)
+      await this.verify[identification.type](
+        identification,
+        identifications,
+        headers
+      );
 
     const cleanPerson = JSON.parse(JSON.stringify(person.receivedItem));
     delete cleanPerson.instances;
