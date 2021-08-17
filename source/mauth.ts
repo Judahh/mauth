@@ -181,7 +181,22 @@ export default class Mauth {
     } else if (req.body?.identification) {
       const identification = req.body;
       try {
-        const person = await this.signIn(identification, req.headers);
+        const person: { identification: Array<{ key: unknown; id: unknown }> } =
+          (await this.signIn(identification, req.headers)) as {
+            identification: Array<{ key: unknown; id: unknown }>;
+          };
+        person.identification = person.identification.map((id) => {
+          delete id.key;
+          delete id.id;
+          return id;
+        });
+        console.log('AUTH:', person);
+        console.log('AUTH T:', identification);
+        if (!req.headers) req.headers = { tokenid: '', picture: '' };
+        req.headers.authorization = await JsonWebToken.getInstance().sign(
+          person,
+          identification.type
+        );
         await fn(person);
       } catch (error) {
         await fn(error);
