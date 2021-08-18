@@ -44,8 +44,8 @@ export default class Mauth {
       ? bearer.includes('Bearer ')
         ? bearer.replace('Bearer ', '')
         : bearer.includes('Bearer')
-        ? bearer.replace('Bearer', '')
-        : bearer
+          ? bearer.replace('Bearer', '')
+          : bearer
       : bearer;
     return newBearer && newBearer.length > 0 ? newBearer : undefined;
   }
@@ -190,8 +190,6 @@ export default class Mauth {
           delete id.id;
           return id;
         });
-        console.log('AUTH:', person);
-        console.log('AUTH T:', identification);
         if (!req.headers) req.headers = { tokenid: '', picture: '' };
         req.headers.authorization = await JsonWebToken.getInstance().sign(
           person,
