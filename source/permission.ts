@@ -7,7 +7,7 @@ import Permissions from './util/permissions';
 export default class Permission {
   protected static _instance: Permission;
   getInstanceName(): string {
-    return process.env.INSTANCE || 'auth'; //|| 'VUTT';
+    return process.env.INSTANCE || 'auth';
   }
 
   getServiceName(): string {

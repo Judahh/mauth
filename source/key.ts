@@ -8,9 +8,9 @@ import Identification from './util/identification';
 
 export default class Key implements AuthService {
   async key(): Promise<string> {
-    if (this._privateKey && this._publicKey) {
+    if (!this.host && this._publicKey) {
       return this._publicKey;
-    } else if (this._publicKey) {
+    } else if (this._publicKey && this.host) {
       if (!this.keyTimerRunning) {
         setTimeout(this.refreshKey.bind(this), 15 * 60 * 1000);
         this.keyTimerRunning = true;
@@ -24,9 +24,10 @@ export default class Key implements AuthService {
     return this._privateKey;
   }
   protected async getKey(): Promise<string> {
-    const host = process.env.AUTH_HOST;
-    const received = await axios.get(host + '/key', await this.config());
-    this._publicKey = received.data.key as string;
+    const received = this.host
+      ? await axios.get(this.host + '/key', await this.config())
+      : undefined;
+    this._publicKey = received?.data?.key as string;
     return this._publicKey;
   }
   protected async refreshKey(): Promise<void> {
@@ -46,17 +47,21 @@ export default class Key implements AuthService {
     }
     return this._instance;
   }
+  protected host?: string = process.env.AUTH_HOST;
   protected _privateKey?: string = process.env.JWT_PRIVATE_KEY;
   protected _publicKey?: string = process.env.JWT_PUBLIC_KEY;
   protected keyTimerRunning: boolean;
   protected authToken;
   protected tokenTimerRunning;
 
-  protected credential = {
-    type: 'SERVICE',
-    identification: process.env.AUTH_IDENTIFICATION,
-    key: process.env.AUTH_PASSWORD,
-  };
+  protected credential?: { type: string; identification: string; key: string } =
+    process.env.AUTH_IDENTIFICATION && process.env.AUTH_PASSWORD
+      ? {
+        type: 'SERVICE',
+        identification: process.env.AUTH_IDENTIFICATION,
+        key: process.env.AUTH_PASSWORD,
+      }
+      : undefined;
 
   async config(): Promise<{
     headers: {
@@ -70,9 +75,11 @@ export default class Key implements AuthService {
     };
   }
   protected async getToken(): Promise<string> {
-    const host = process.env.AUTH_HOST;
-    const received = await axios.post(host + '/signIn', this.credential);
-    this.authToken = received.data.token;
+    const received =
+      this.host && this.credential
+        ? await axios.post(this.host + '/signIn', this.credential)
+        : undefined;
+    this.authToken = received?.data?.token;
     return this.authToken;
   }
   protected async refreshToken(): Promise<void> {
