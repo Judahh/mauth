@@ -2,7 +2,7 @@
   "name": "@midware/mauth",
   "productName": "mauth",
   "author": "Judah Holanda Correia Lima <judahholanda7@gmail.com> (https://judahh.com)",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "private": false,
   "description": "A simple pub-sub library project",
   "main": "dist/source/index.js",
