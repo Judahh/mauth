@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Permission from './permission';
 import JsonWebToken from './jsonWebToken';
 import UnauthorizedError from './util/unauthorizedError';
@@ -44,8 +45,8 @@ export default class Mauth {
       ? bearer.includes('Bearer ')
         ? bearer.replace('Bearer ', '')
         : bearer.includes('Bearer')
-          ? bearer.replace('Bearer', '')
-          : bearer
+        ? bearer.replace('Bearer', '')
+        : bearer
       : bearer;
     return newBearer && newBearer.length > 0 ? newBearer : undefined;
   }
@@ -86,7 +87,7 @@ export default class Mauth {
           error.name = 'Unauthorized';
           await fn(error);
         }
-      } catch (error) {
+      } catch (error: any) {
         // console.log('Error NAME:' + error.name);
         error.name = 'Unauthorized';
         await fn(error);
@@ -108,7 +109,7 @@ export default class Mauth {
         personAndIdentifications = await this.getPersonAndIdentifications(
           identification
         );
-    } catch (error) {
+    } catch (error: any) {
       error = new Error('Unauthorized');
       error.name = 'Unauthorized';
       throw error;
@@ -152,7 +153,7 @@ export default class Mauth {
         const auth = await JsonWebToken.getInstance().verify(req.authorization);
         req.permissions = auth.permissions;
         await fn(auth);
-      } catch (error) {
+      } catch (error: any) {
         error.name = 'Unauthorized';
         await fn(error);
       }
@@ -217,7 +218,7 @@ export default class Mauth {
           req.permissions
         );
         fn(permission);
-      } catch (error) {
+      } catch (error: any) {
         error.name = 'Unauthorized';
         await fn(error);
       }
