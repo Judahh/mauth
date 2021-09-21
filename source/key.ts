@@ -1,7 +1,7 @@
 import { setTimeout } from 'timers';
 import axios from 'axios';
 import bcrypt from 'bcrypt';
-import { default as crypt } from '../config/crypt.json';
+import crypt from '../config/crypt';
 import AuthService from './util/authService';
 import { UnauthorizedError } from '.';
 import Identification from './util/identification';
@@ -57,10 +57,10 @@ export default class Key implements AuthService {
   protected credential?: { type: string; identification: string; key: string } =
     process.env.AUTH_IDENTIFICATION && process.env.AUTH_PASSWORD
       ? {
-        type: 'SERVICE',
-        identification: process.env.AUTH_IDENTIFICATION,
-        key: process.env.AUTH_PASSWORD,
-      }
+          type: 'SERVICE',
+          identification: process.env.AUTH_IDENTIFICATION,
+          key: process.env.AUTH_PASSWORD,
+        }
       : undefined;
 
   async config(): Promise<{

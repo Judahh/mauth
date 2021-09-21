@@ -1,7 +1,7 @@
 // file deepcode ignore no-any: any needed
 import jsonwebtoken from 'jsonwebtoken';
 import Key from './key';
-import { default as crypt } from '../config/crypt.json';
+import crypt from '../config/crypt';
 import Identification from './util/identification';
 
 export default class JsonWebToken {
