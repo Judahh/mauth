@@ -2091,9 +2091,9 @@ flatted@^3.1.0:
   integrity sha512-JaTY/wtrcSyvXJl4IMFHPKyFur1sE9AUqc0QnhOaJ0CxHtAoIV8pYDzeEfAaNEtGkOfq4gr3LBFmdXW5mOQFnA==
 
 flexiblepersistence@latest:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/flexiblepersistence/-/flexiblepersistence-1.5.1.tgz#db9329a7708eb95fea02c888a66216ae574ff7ef"
-  integrity sha512-CXEquBbsKUACaU+vtUlDBANyTUHNe4qnTnmFI3RfqHpq3R3ReRTxLbD/EecqUzojY2pcqcPytvV1/33SLcqlHA==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/flexiblepersistence/-/flexiblepersistence-2.1.0.tgz#7b5a91a68b176cbd22b87b9f1dbd20c6da993e07"
+  integrity sha512-Jfx+m/5TByYULw10HMWk0Elskdc8SxVzS5jsoFtPOVF8VahI7341S2sRWNKNzX1ttUvJGjomBXepusupXyrrRA==
   dependencies:
     "@flexiblepersistence/default-initializer" latest
     journaly latest
