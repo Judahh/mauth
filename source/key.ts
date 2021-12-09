@@ -1,18 +1,38 @@
 import { setTimeout } from 'timers';
-import axios from 'axios';
-import bcrypt from 'bcrypt';
-import crypt from '../config/crypt';
+let bcrypt;
+if (process.env.BCRYPT_USE_NODE?.toLocaleLowerCase() === 'true') {
+  bcrypt = require('bcrypt');
+} else {
+  bcrypt = require('bcryptjs');
+}
+import cryptConfig from '../config/crypt';
 import AuthService from './util/authService';
 import { UnauthorizedError } from '.';
 import Identification from './util/identification';
+import { sendGet, sendPost } from './utils';
+import ICrypt from './iCrypt';
 
 export default class Key implements AuthService {
+  private configREST = {
+    headers: {
+      Type: 'application/json',
+      Accept: 'application/json',
+    },
+  };
+
+  private crypt: ICrypt;
+
   async key(): Promise<string> {
     if (!this.host && this._publicKey) {
       return this._publicKey;
     } else if (this._publicKey && this.host) {
       if (!this.keyTimerRunning) {
-        setTimeout(this.refreshKey.bind(this), 15 * 60 * 1000);
+        setTimeout(
+          this.refreshKey.bind(this),
+          process.env.AUTH_KEY_EXPIRES_IN_MS
+            ? +process.env.AUTH_KEY_EXPIRES_IN_MS
+            : 15 * 60 * 1000
+        );
         this.keyTimerRunning = true;
       }
       return this._publicKey;
@@ -25,9 +45,16 @@ export default class Key implements AuthService {
   }
   protected async getKey(): Promise<string> {
     const received = this.host
-      ? await axios.get(this.host + '/key', await this.config())
+      ? ((await sendGet(
+          this.host,
+          '/signIn',
+          undefined,
+          await this.config()
+        )) as {
+          key: string;
+        })
       : undefined;
-    this._publicKey = received?.data?.key as string;
+    this._publicKey = received?.key as string;
     return this._publicKey;
   }
   protected async refreshKey(): Promise<void> {
@@ -37,13 +64,14 @@ export default class Key implements AuthService {
 
   protected static _instance: Key;
 
-  protected constructor() {
+  protected constructor(crypt?: ICrypt) {
     this.keyTimerRunning = false;
+    this.crypt = crypt ? crypt : bcrypt;
   }
 
-  static getInstance(): Key {
+  static getInstance(crypt?: ICrypt): Key {
     if (!this._instance) {
-      this._instance = new this();
+      this._instance = new this(crypt);
     }
     return this._instance;
   }
@@ -55,11 +83,11 @@ export default class Key implements AuthService {
   protected tokenTimerRunning;
 
   protected credential?: { type: string; identification: string; key: string } =
-    process.env.AUTH_IDENTIFICATION && process.env.AUTH_PASSWORD
+    process.env.SERVICE_NAME && process.env.SERVICE_KEY
       ? {
           type: 'SERVICE',
-          identification: process.env.AUTH_IDENTIFICATION,
-          key: process.env.AUTH_PASSWORD,
+          identification: process.env.SERVICE_NAME,
+          key: process.env.SERVICE_KEY,
         }
       : undefined;
 
@@ -69,6 +97,7 @@ export default class Key implements AuthService {
     };
   }> {
     return {
+      ...this.configREST,
       headers: {
         authorization: `Bearer ${await this.token()}`,
       },
@@ -77,9 +106,16 @@ export default class Key implements AuthService {
   protected async getToken(): Promise<string> {
     const received =
       this.host && this.credential
-        ? await axios.post(this.host + '/signIn', this.credential)
+        ? ((await sendPost(
+            this.host,
+            '/signIn',
+            this.credential,
+            this.configREST
+          )) as {
+            token: string;
+          })
         : undefined;
-    this.authToken = received?.data?.token;
+    this.authToken = received?.token;
     return this.authToken;
   }
   protected async refreshToken(): Promise<void> {
@@ -89,7 +125,12 @@ export default class Key implements AuthService {
   async token(): Promise<string> {
     if (this.authToken) {
       if (!this.tokenTimerRunning) {
-        setTimeout(this.refreshToken.bind(this), 15 * 24 * 60 * 60 * 1000);
+        setTimeout(
+          this.refreshToken.bind(this),
+          process.env.AUTH_TOKEN_EXPIRES_IN_MS
+            ? +process.env.AUTH_TOKEN_EXPIRES_IN_MS
+            : 15 * 24 * 60 * 60 * 1000
+        );
         this.tokenTimerRunning = true;
       }
       return this.authToken;
@@ -109,16 +150,16 @@ export default class Key implements AuthService {
         identification.key &&
         identification.identification === rIdentification.identification
       )
-        if (await bcrypt.compare(rIdentification.key, identification.key))
+        if (await this.crypt.compare(rIdentification.key, identification.key))
           return;
     }
     const error = new UnauthorizedError();
     throw error;
   }
 
-  generateHash(key: string): string {
+  async generateHash(key: string): Promise<string> {
     // console.log('generateHash key:', key);
 
-    return bcrypt.hash(key, crypt.hashSaltRounds);
+    return await this.crypt.hash(key, cryptConfig.hashSaltRounds);
   }
 }

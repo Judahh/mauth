@@ -9,6 +9,13 @@ import Query from './util/query';
 import Params from './util/params';
 import Event from './util/event';
 import Permissions from './util/permissions';
+import ICrypt from './iCrypt';
+let bcrypt;
+if (process.env.BCRYPT_USE_NODE?.toLocaleLowerCase() === 'true') {
+  bcrypt = require('bcrypt');
+} else {
+  bcrypt = require('bcryptjs');
+}
 
 export default class Mauth {
   protected verify?: {
@@ -23,6 +30,8 @@ export default class Mauth {
     identifications: Identification[];
   }>;
 
+  private crypt: ICrypt;
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(
     getPersonAndIdentifications?: (
@@ -34,10 +43,12 @@ export default class Mauth {
     }>,
     verify?: {
       [type: string]: Verify;
-    }
+    },
+    crypt?: ICrypt
   ) {
     this.getPersonAndIdentifications = getPersonAndIdentifications;
     this.verify = verify;
+    this.crypt = crypt ? crypt : bcrypt;
   }
 
   static getBearerAuthentication(bearer?: string): string | undefined {

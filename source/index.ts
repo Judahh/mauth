@@ -13,6 +13,8 @@ import Event from './util/event';
 import Permissions from './util/permissions';
 import Params from './util/params';
 import Query from './util/query';
+import ICrypt from './iCrypt';
+import { sendPost, sendPut, sendGet, sendDelete, request } from './utils';
 
 export {
   AuthService,
@@ -30,4 +32,10 @@ export {
   Params,
   Permissions,
   Query,
+  ICrypt,
+  sendPost,
+  sendPut,
+  sendGet,
+  sendDelete,
+  request,
 };

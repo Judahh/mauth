@@ -2,9 +2,9 @@
   "name": "@midware/mauth",
   "productName": "mauth",
   "author": "Judah Holanda Correia Lima <judahholanda7@gmail.com> (https://judahh.com)",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
-  "description": "A simple pub-sub library project",
+  "description": "A simple auth middleware for Node.js",
   "main": "dist/source/index.js",
   "keywords": [
     "back-end",
@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "bcrypt": "latest",
+    "bcryptjs": "latest",
     "google-auth-library": "latest",
     "jsonwebtoken": "latest",
     "axios": "latest",
