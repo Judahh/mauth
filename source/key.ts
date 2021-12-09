@@ -144,6 +144,9 @@ export default class Key implements AuthService {
     identifications: Identification[]
   ): Promise<void> {
     // console.log(rIdentification, identifications);
+    if (this.crypt === undefined) {
+      throw new Error('Crypt undefined');
+    }
     for (const identification of identifications) {
       if (
         rIdentification.key &&
@@ -159,7 +162,9 @@ export default class Key implements AuthService {
 
   async generateHash(key: string): Promise<string> {
     // console.log('generateHash key:', key);
-
+    if (this.crypt === undefined) {
+      throw new Error('Crypt undefined');
+    }
     return await this.crypt.hash(key, cryptConfig.hashSaltRounds);
   }
 }
