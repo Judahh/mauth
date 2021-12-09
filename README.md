@@ -55,12 +55,13 @@ $ yarn test
 ```
 
 ## Environment Variables:
+
 GOOGLE_CLIENT_ID = Google Client Id
 AUTH_HOST = Auth host URL to get keys
 JWT_PRIVATE_KEY = RSA Private Key to generate JWT
 JWT_PUBLIC_KEY = RSA Public Key to get JWT
-SERVICE_NAME = Credential id to connect to  Auth host
-SERVICE_KEY = Credential KEY to connect to  Auth host
+SERVICE_NAME = Credential id to connect to Auth host
+SERVICE_KEY = Credential KEY to connect to Auth host
 SERVICE_NAME = Project name
 INSTANCE = Project instance name
 
