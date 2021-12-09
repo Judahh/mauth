@@ -10,12 +10,6 @@ import Params from './util/params';
 import Event from './util/event';
 import Permissions from './util/permissions';
 import ICrypt from './iCrypt';
-let bcrypt;
-if (process.env.BCRYPT_USE_NODE?.toLocaleLowerCase() === 'true') {
-  bcrypt = require('bcrypt');
-} else {
-  bcrypt = require('bcryptjs');
-}
 
 export default class Mauth {
   protected verify?: {
@@ -30,7 +24,7 @@ export default class Mauth {
     identifications: Identification[];
   }>;
 
-  private crypt: ICrypt;
+  private crypt?: ICrypt;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(
@@ -48,7 +42,7 @@ export default class Mauth {
   ) {
     this.getPersonAndIdentifications = getPersonAndIdentifications;
     this.verify = verify;
-    this.crypt = crypt ? crypt : bcrypt;
+    this.crypt = crypt;
   }
 
   static getBearerAuthentication(bearer?: string): string | undefined {
@@ -85,7 +79,9 @@ export default class Mauth {
   ): Promise<void> {
     if (req.authorization) {
       try {
-        const auth = await JsonWebToken.getInstance().verify(req.authorization);
+        const auth = await JsonWebToken.getInstance(this.crypt).verify(
+          req.authorization
+        );
         // console.log('authentication', auth);
         if (
           (req.query && req.query.id === auth.id) ||
@@ -161,7 +157,9 @@ export default class Mauth {
     req.authorization = this.getAuthentication(req);
     if (req.authorization) {
       try {
-        const auth = await JsonWebToken.getInstance().verify(req.authorization);
+        const auth = await JsonWebToken.getInstance(this.crypt).verify(
+          req.authorization
+        );
         req.permissions = auth.permissions;
         await fn(auth);
       } catch (error: any) {
@@ -203,10 +201,9 @@ export default class Mauth {
           return id;
         });
         if (!req.headers) req.headers = { tokenid: '', picture: '' };
-        req.headers.authorization = await JsonWebToken.getInstance().sign(
-          person,
-          identification.type
-        );
+        req.headers.authorization = await JsonWebToken.getInstance(
+          this.crypt
+        ).sign(person, identification.type);
         await fn(person);
       } catch (error) {
         await fn(error);

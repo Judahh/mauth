@@ -4,19 +4,13 @@ import Key from './key';
 import cryptConfig from '../config/crypt';
 import Identification from './util/identification';
 import ICrypt from './iCrypt';
-let bcrypt;
-if (process.env.BCRYPT_USE_NODE?.toLocaleLowerCase() === 'true') {
-  bcrypt = require('bcrypt');
-} else {
-  bcrypt = require('bcryptjs');
-}
 
 export default class JsonWebToken {
   protected static _instance: JsonWebToken;
 
-  private crypt: ICrypt;
+  private crypt?: ICrypt;
   protected constructor(crypt?: ICrypt) {
-    this.crypt = crypt ? crypt : bcrypt;
+    this.crypt = crypt;
   }
 
   static getInstance(crypt?: ICrypt): JsonWebToken {
