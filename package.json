@@ -2,7 +2,7 @@
   "name": "@midware/mauth",
   "productName": "mauth",
   "author": "Judah Holanda Correia Lima <judahholanda7@gmail.com> (https://judahh.com)",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": false,
   "description": "A simple auth middleware for Node.js",
   "main": "dist/source/index.js",
@@ -62,9 +62,9 @@
     "eslint-config-prettier": "latest",
     "eslint-plugin-filenames": "latest",
     "eslint-plugin-prettier": "latest",
-    "jest": "26.6.2",
+    "jest": "latest",
     "prettier": "latest",
-    "ts-jest": "26.5.6",
+    "ts-jest": "latest",
     "typescript": "latest"
   }
 }
