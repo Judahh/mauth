@@ -78,10 +78,6 @@ export default class Mauth {
     // eslint-disable-next-line no-unused-vars
     fn: (arg0: unknown) => Promise<unknown>
   ): Promise<void> {
-    if (req.method?.toLowerCase() === 'options') {
-      await fn({ method: 'options' });
-      return;
-    }
     if (req.authorization) {
       try {
         const auth = await JsonWebToken.getInstance(this.crypt).verify(
@@ -189,10 +185,6 @@ export default class Mauth {
     // eslint-disable-next-line no-unused-vars
     fn: (arg0: unknown) => unknown
   ): Promise<void> {
-    if (req.method?.toLowerCase() === 'options') {
-      await fn({ method: 'options' });
-      return;
-    }
     if (
       (req.query && req.query.token) ||
       (req.headers && req.headers.authorization)
@@ -229,10 +221,6 @@ export default class Mauth {
     // eslint-disable-next-line no-unused-vars
     fn: (arg0: unknown) => Promise<unknown>
   ): Promise<void> {
-    if (req.method?.toLowerCase() === 'options') {
-      await fn({ method: 'options' });
-      return;
-    }
     if (req.event && req.permissions) {
       try {
         const permission = await Permission.getInstance().permission(
