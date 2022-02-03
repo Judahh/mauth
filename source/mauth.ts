@@ -56,15 +56,33 @@ export default class Mauth {
     return newBearer && newBearer.length > 0 ? newBearer : undefined;
   }
 
+  static checkAuthentication(req: {
+    headers?: Headers;
+    query?: Query;
+    authorization?: string;
+    auth?: string;
+  }): string | undefined {
+    return (
+      req?.headers?.authorization ||
+      req?.headers?.Authorization ||
+      req?.headers?.token ||
+      req?.headers?.Token ||
+      req?.query?.token ||
+      req?.authorization ||
+      req?.auth
+    );
+  }
+
   getAuthentication(req: {
     headers?: Headers;
     query?: Query;
+    authorization?: string;
+    auth?: string;
   }): string | undefined {
-    const bearer = req.headers
-      ? Mauth.getBearerAuthentication(req.headers.authorization)
-      : undefined;
-    const token = req.query ? req.query.token : undefined;
-    return bearer || token;
+    const bearer = Mauth.getBearerAuthentication(
+      Mauth.checkAuthentication(req)
+    );
+    return bearer;
   }
 
   async selfRestriction(
@@ -185,10 +203,7 @@ export default class Mauth {
     // eslint-disable-next-line no-unused-vars
     fn: (arg0: unknown) => unknown
   ): Promise<void> {
-    if (
-      (req.query && req.query.token) ||
-      (req.headers && req.headers.authorization)
-    ) {
+    if (Mauth.checkAuthentication(req)) {
       await this.checkToken(req, res, fn);
     } else if (req.body?.identification) {
       const identification = req.body;
