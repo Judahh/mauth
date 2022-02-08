@@ -130,22 +130,24 @@ export default class Mauth {
     headers?: Headers
   ): Promise<unknown> {
     let personAndIdentifications;
+    let person;
+    let identifications;
     try {
       if (this.getPersonAndIdentifications)
         personAndIdentifications = await this.getPersonAndIdentifications(
           identification
         );
+      person = personAndIdentifications.person;
+      identifications = personAndIdentifications.identifications as {
+        identification: string | undefined;
+        key: string | undefined;
+        type: string;
+      }[];
     } catch (error: any) {
       error = new Error('Unauthorized');
       error.name = 'Unauthorized';
       throw error;
     }
-    const person = personAndIdentifications.person;
-    const identifications = personAndIdentifications.identifications as {
-      identification: string | undefined;
-      key: string | undefined;
-      type: string;
-    }[];
 
     if (this.verify)
       await this.verify[identification.type](
@@ -154,10 +156,14 @@ export default class Mauth {
         headers
       );
 
-    const cleanPerson = JSON.parse(JSON.stringify(person.receivedItem));
-    delete cleanPerson.instances;
-    delete cleanPerson.identifications;
-    cleanPerson.identification = identifications;
+    const cleanPerson = person?.receivedItem
+      ? JSON.parse(JSON.stringify(person?.receivedItem))
+      : undefined;
+    if (cleanPerson) {
+      delete cleanPerson?.instances;
+      delete cleanPerson?.identifications;
+      cleanPerson.identification = identifications;
+    }
     return cleanPerson;
   }
 
