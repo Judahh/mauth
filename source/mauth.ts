@@ -73,7 +73,7 @@ export default class Mauth {
     );
   }
 
-  getAuthentication(req: {
+  static getAuthentication(req: {
     headers?: Headers;
     query?: Query;
     authorization?: string;
@@ -179,7 +179,7 @@ export default class Mauth {
     // eslint-disable-next-line no-unused-vars
     fn: (arg0: unknown) => unknown
   ): Promise<void> {
-    req.authorization = this.getAuthentication(req);
+    req.authorization = Mauth.getAuthentication(req);
     if (req.authorization) {
       try {
         const auth = await JsonWebToken.getInstance(this.crypt).verify(
