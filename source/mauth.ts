@@ -10,10 +10,14 @@ import Params from './util/params';
 import Event from './util/event';
 import Permissions from './util/permissions';
 import ICrypt from './iCrypt';
+import Sender from './util/sender';
 
 export default class Mauth {
   protected verify?: {
     [type: string]: Verify;
+  };
+  protected keyless?: {
+    [type: string]: Sender;
   };
 
   protected getPersonAndIdentifications?: (
@@ -38,10 +42,14 @@ export default class Mauth {
     verify?: {
       [type: string]: Verify;
     },
+    keyless?: {
+      [type: string]: Sender;
+    },
     crypt?: ICrypt
   ) {
     this.getPersonAndIdentifications = getPersonAndIdentifications;
     this.verify = verify;
+    this.keyless = keyless;
     this.crypt = crypt;
   }
 
@@ -163,6 +171,10 @@ export default class Mauth {
       delete cleanPerson?.instances;
       delete cleanPerson?.identifications;
       cleanPerson.identification = identifications;
+    }
+    if (identification?.type?.toLocaleUpperCase()==='KEYLESS'){
+      this.keyless?.[identification?.subType?.toLocaleUpperCase()||'']?.(cleanPerson, identification);
+      return;
     }
     return cleanPerson;
   }

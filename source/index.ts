@@ -15,12 +15,16 @@ import Params from './util/params';
 import Query from './util/query';
 import ICrypt from './iCrypt';
 import { sendPost, sendPut, sendGet, sendDelete, request } from './utils';
+import KeyLess from './keyless';
+import Sender from './util/sender';
 
 export {
   AuthService,
   UnauthorizedError,
   UpdatePicture,
   Verify,
+  KeyLess,
+  Sender,
   Google,
   JsonWebToken,
   Key,

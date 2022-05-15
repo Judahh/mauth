@@ -6,5 +6,8 @@ type Identification = {
   identification: string | undefined;
   key: string | undefined;
   type: string;
+  subType?: string;
+  text?: string;
+  html?: string;
 };
 export default Identification;
