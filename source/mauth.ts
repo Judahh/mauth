@@ -172,9 +172,12 @@ export default class Mauth {
       delete cleanPerson?.identifications;
       cleanPerson.identification = identifications;
     }
-    if (identification?.type?.toLocaleUpperCase()==='KEYLESS'){
-      this.keyless?.[identification?.subType?.toLocaleUpperCase()||'']?.(cleanPerson, identification);
-      return;
+    if (identification?.type?.toLocaleUpperCase() === 'KEYLESS') {
+      this.keyless?.[identification?.subType?.toLocaleUpperCase() || '']?.(
+        cleanPerson,
+        identification
+      );
+      return { identification: [identification] };
     }
     return cleanPerson;
   }
@@ -226,10 +229,18 @@ export default class Mauth {
     } else if (req.body?.identification) {
       const identification = req.body;
       try {
-        const person: { identification: Array<{ key: unknown; id: unknown }> } =
-          (await this.signIn(identification, req.headers)) as {
-            identification: Array<{ key: unknown; id: unknown }>;
-          };
+        const person: {
+          identification: Array<{ key: unknown; id: unknown; type: string }>;
+        } = (await this.signIn(identification, req.headers)) as {
+          identification: Array<{ key: unknown; id: unknown; type: string }>;
+        };
+        if (
+          person.identification?.[0]?.type?.toLocaleUpperCase() === 'KEYLESS'
+        ) {
+          console.log('person KEYLESS', person);
+          await fn(person);
+          return;
+        }
         person.identification = person.identification.map((id) => {
           delete id.key;
           delete id.id;
