@@ -10,10 +10,14 @@ import Params from './util/params';
 import Event from './util/event';
 import Permissions from './util/permissions';
 import ICrypt from './iCrypt';
+import Sender from './util/sender';
 
 export default class Mauth {
   protected verify?: {
     [type: string]: Verify;
+  };
+  protected keyless?: {
+    [type: string]: Sender;
   };
 
   protected getPersonAndIdentifications?: (
@@ -38,10 +42,14 @@ export default class Mauth {
     verify?: {
       [type: string]: Verify;
     },
+    keyless?: {
+      [type: string]: Sender;
+    },
     crypt?: ICrypt
   ) {
     this.getPersonAndIdentifications = getPersonAndIdentifications;
     this.verify = verify;
+    this.keyless = keyless;
     this.crypt = crypt;
   }
 
@@ -164,6 +172,13 @@ export default class Mauth {
       delete cleanPerson?.identifications;
       cleanPerson.identification = identifications;
     }
+    if (identification?.type?.toLocaleUpperCase() === 'KEYLESS') {
+      this.keyless?.[identification?.subType?.toLocaleUpperCase() || '']?.(
+        cleanPerson,
+        identification
+      );
+      return { identification: [identification] };
+    }
     return cleanPerson;
   }
 
@@ -214,10 +229,18 @@ export default class Mauth {
     } else if (req.body?.identification) {
       const identification = req.body;
       try {
-        const person: { identification: Array<{ key: unknown; id: unknown }> } =
-          (await this.signIn(identification, req.headers)) as {
-            identification: Array<{ key: unknown; id: unknown }>;
-          };
+        const person: {
+          identification: Array<{ key: unknown; id: unknown; type: string }>;
+        } = (await this.signIn(identification, req.headers)) as {
+          identification: Array<{ key: unknown; id: unknown; type: string }>;
+        };
+        if (
+          person.identification?.[0]?.type?.toLocaleUpperCase() === 'KEYLESS'
+        ) {
+          console.log('person KEYLESS', person);
+          await fn(person);
+          return;
+        }
         person.identification = person.identification.map((id) => {
           delete id.key;
           delete id.id;
