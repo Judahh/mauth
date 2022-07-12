@@ -48,7 +48,7 @@
   "dependencies": {
     "bcrypt": "latest",
     "bcryptjs": "latest",
-    "google-auth-library": "latest",
+    "google-auth-library": "8.0.3",
     "jsonwebtoken": "latest",
     "axios": "latest",
     "flexiblepersistence": "latest"
