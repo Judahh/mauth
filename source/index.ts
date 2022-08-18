@@ -17,7 +17,12 @@ import ICrypt from './iCrypt';
 import { sendPost, sendPut, sendGet, sendDelete, request } from './utils';
 import KeyLess from './keyless';
 import Sender from './util/sender';
-import { request as smartRequest } from './smartRequest';
+import {
+  request as smartRequest,
+  addPath,
+  genPath,
+  getPath,
+} from './smartRequest';
 
 export {
   AuthService,
@@ -44,4 +49,7 @@ export {
   sendDelete,
   request,
   smartRequest,
+  addPath,
+  genPath,
+  getPath,
 };
