@@ -2,7 +2,7 @@
   "name": "@midware/mauth",
   "productName": "mauth",
   "author": "Judah Holanda Correia Lima <judahholanda7@gmail.com> (https://judahh.com)",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "private": false,
   "description": "A simple auth middleware for Node.js",
   "main": "dist/source/index.js",
