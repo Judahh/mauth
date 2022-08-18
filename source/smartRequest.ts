@@ -10,13 +10,39 @@ const crud = {
   delete: 'delete',
 };
 
+const genPath = (
+  name: string,
+  value?: (number | string) | (number | string)[]
+) => {
+  return value !== undefined && value !== null
+    ? Array.isArray(value)
+      ? name +
+        '%5B%5D=' +
+        value.map((av) => encodeURI(av.toString())).join('&' + name + '%5B%5D=')
+      : name + '=' + encodeURI(value.toString())
+    : undefined;
+};
+
+const getPath = (oldPath?: string): string => {
+  return oldPath !== undefined && oldPath !== null && oldPath?.length > 0
+    ? `${oldPath}&`
+    : '?';
+};
+
+const addPath = (oldPath?: string, addPath?: string) => {
+  return addPath !== undefined && addPath !== null
+    ? getPath(oldPath) + addPath
+    : oldPath;
+};
+
 const request = async (
   method: string,
   host: string,
   domain: string,
   service: string,
-  endpoint?: string,
+  query?: unknown,
   input?: unknown,
+  endpoint?: string,
   config: AxiosRequestConfig = {},
   out?: unknown
 ): Promise<unknown> => {
@@ -50,7 +76,7 @@ const request = async (
       const response = await aRequest(
         method,
         host,
-        endpoint,
+        endpoint || `/${domain}/${service}${query || ''}`,
         input,
         config,
         out
@@ -63,4 +89,4 @@ const request = async (
   }
 };
 
-export { request };
+export { request, addPath, genPath, getPath };
