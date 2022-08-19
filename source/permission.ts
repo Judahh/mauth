@@ -15,7 +15,7 @@ export default class Permission {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  protected constructor() { }
+  protected constructor() {}
 
   static getInstance(): Permission {
     if (!this._instance) {
@@ -24,13 +24,26 @@ export default class Permission {
     return this._instance;
   }
 
+  formatPermissions(instancePermissions: any): any {
+    for (const key in instancePermissions) {
+      if (Object.hasOwnProperty.call(instancePermissions, key)) {
+        instancePermissions[key.toLowerCase()] = instancePermissions[key];
+      }
+    }
+    return instancePermissions;
+  }
+
   permission(event: Event, permissions: Permissions): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
         const instanceName = this.getInstanceName();
-        const instance = permissions['all'] || permissions[instanceName];
+        const instance = this.formatPermissions(
+          permissions['all'] || permissions[instanceName]
+        );
+
         if (instance) {
-          const service = instance['all'] || instance[event.name];
+          const service =
+            instance['all'] || instance[event?.name?.toLowerCase?.()];
           if (service) {
             const operationName = Operation[event.operation];
             const operation =
