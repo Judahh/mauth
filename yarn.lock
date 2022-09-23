@@ -1784,9 +1784,9 @@ globby@^11.1.0:
     slash "^3.0.0"
 
 google-auth-library@latest:
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-8.2.0.tgz#36d93e42f9bc8856ac2e69778b2b7a1e2aa16217"
-  integrity sha512-wCWs44jLT3cbzONVk2NKK1sfWaKCqzR21cudG3r9tV53/DC/wImxEr7HK5OBlEU5Q1iepZsrdFOxvzmC0M/YRQ==
+  version "8.5.2"
+  resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-8.5.2.tgz#bcdced8f7b475b80bf0e9c109c7c7e930866947b"
+  integrity sha512-FPfOSaI8n2TVXFHTP8/vAVFCXhyALj7w9/Rgefux3oeKZ/nQDNmfNTJ+lIKcoYT1cKkvMllp1Eood7Y5L+TP+A==
   dependencies:
     arrify "^2.0.0"
     base64-js "^1.3.0"
@@ -1794,7 +1794,7 @@ google-auth-library@latest:
     fast-text-encoding "^1.0.0"
     gaxios "^5.0.0"
     gcp-metadata "^5.0.0"
-    gtoken "^6.0.0"
+    gtoken "^6.1.0"
     jws "^4.0.0"
     lru-cache "^6.0.0"
 
@@ -1815,10 +1815,10 @@ grapheme-splitter@^1.0.4:
   resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
   integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
 
-gtoken@^6.0.0:
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/gtoken/-/gtoken-6.1.1.tgz#29ebf3e6893719176d180f5694f1cad525ce3c04"
-  integrity sha512-HPM4VzzPEGxjQ7T2xLrdSYBs+h1c0yHAUiN+8RHPDoiZbndlpg9Sx3SjWcrTt9+N3FHsSABEpjvdQVan5AAuZQ==
+gtoken@^6.1.0:
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/gtoken/-/gtoken-6.1.2.tgz#aeb7bdb019ff4c3ba3ac100bbe7b6e74dce0e8bc"
+  integrity sha512-4ccGpzz7YAr7lxrT2neugmXQ3hP9ho2gcaityLVkiUecAiwiy60Ii8gRbZeOsXV19fYaRjgBSshs8kXw+NKCPQ==
   dependencies:
     gaxios "^5.0.1"
     google-p12-pem "^4.0.0"
