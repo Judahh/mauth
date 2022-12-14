@@ -51,7 +51,7 @@
     "google-auth-library": "latest",
     "jsonwebtoken": "latest",
     "axios": "latest",
-    "flexiblepersistence": "latest"
+    "flexiblepersistence": "3.2.3"
   },
   "devDependencies": {
     "@types/jest": "latest",
