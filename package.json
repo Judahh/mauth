@@ -49,7 +49,7 @@
     "bcrypt": "latest",
     "bcryptjs": "latest",
     "google-auth-library": "latest",
-    "jsonwebtoken": "latest",
+    "jsonwebtoken": "9.0.0",
     "axios": "latest",
     "flexiblepersistence": "latest"
   },
