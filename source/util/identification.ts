@@ -14,5 +14,7 @@ type Identification = {
   service?: {
     url?: string;
   };
+  iat?: number;
+  exp?: number;
 };
 export default Identification;
