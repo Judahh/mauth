@@ -50,7 +50,7 @@
     "bcryptjs": "latest",
     "google-auth-library": "latest",
     "jsonwebtoken": "latest",
-    "axios": "latest",
+    "axios": "1.6.0",
     "flexiblepersistence": "latest"
   },
   "devDependencies": {
