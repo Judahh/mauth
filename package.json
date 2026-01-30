@@ -46,7 +46,7 @@
     "tsc:w": "tsc -w"
   },
   "dependencies": {
-    "bcrypt": "latest",
+    "bcrypt": "6.0.0",
     "bcryptjs": "latest",
     "google-auth-library": "latest",
     "jsonwebtoken": "latest",
